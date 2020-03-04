@@ -8,6 +8,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestHeader;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
@@ -28,14 +29,15 @@ public class OuthController {
 		return outhService.getAuthorizationUrl();
 	}
 	
+	@PostMapping("/auth/code")
+	public GoogleTokenResponse getAccessTokenForAuthorizationCode(@RequestHeader("Authorization") String code) throws GeneralSecurityException, IOException {
+	logger.info("authCode"+code);
+		return outhService.getAccessTokenForAuthorizationCode(code);
+	}
+	
 	@PostMapping("/user/create")
 	public GoogleIdToken getUserDetailByIdToken(@RequestParam("idToken") String idToken) throws GeneralSecurityException, IOException {
 		return outhService.getUserDetailByIdToken(idToken);
 	}
-	@PostMapping("/auth/code")
-	public GoogleTokenResponse getAccessTokenForAuthorizationCode(@RequestParam("code") String code) throws GeneralSecurityException, IOException {
-	logger.info("authCode"+code);
-		return outhService.getAccessTokenForAuthorizationCode(code);
-		
-	}
+	
 }
